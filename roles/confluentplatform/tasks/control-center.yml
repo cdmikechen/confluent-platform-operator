@@ -1,0 +1,21 @@
+---
+- name: "ccontrol-center : reate service account"
+  k8s:
+    definition: "{{ lookup('template', 'control-center/serviceaccount.yaml') }}"
+    state: present
+
+- name: "control-center : create configmap"
+  k8s:
+    definition: "{{ lookup('template', 'control-center/configmap.yaml') }}"
+    state: present
+  register: control_center_configmap
+
+- name: "control-center : create service"
+  k8s:
+    definition: "{{ lookup('template', 'control-center/service.yaml') }}"
+    state: present
+
+- name: "control-center : create cluster"
+  k8s:
+    definition: "{{ lookup('template', 'control-center/statefulset.yaml') }}"
+    state: present

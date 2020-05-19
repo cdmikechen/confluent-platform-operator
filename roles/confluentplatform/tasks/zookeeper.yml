@@ -1,0 +1,21 @@
+---
+- name: "zookeeper : create service account"
+  k8s:
+    definition: "{{ lookup('template', 'zookeeper/serviceaccount.yaml') }}"
+    state: present
+
+- name: "zookeeper : create configmap"
+  k8s:
+    definition: "{{ lookup('template', 'zookeeper/configmap.yaml') }}"
+    state: present
+  register: "zookeeper_configmap"
+
+- name: "zookeeper : create service"
+  k8s:
+    definition: "{{ lookup('template', 'zookeeper/service.yaml') }}"
+    state: present
+
+- name: "zookeeper : create cluster"
+  k8s:
+    definition: "{{ lookup('template', 'zookeeper/statefulset.yaml') }}"
+    state: present

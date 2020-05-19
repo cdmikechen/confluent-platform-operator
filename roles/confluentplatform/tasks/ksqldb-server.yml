@@ -1,0 +1,21 @@
+---
+- name: "ksqldb-server : create service account"
+  k8s:
+    definition: "{{ lookup('template', 'ksqldb-server/serviceaccount.yaml') }}"
+    state: present
+
+- name: "ksqldb-server : create configmap"
+  k8s:
+    definition: "{{ lookup('template', 'ksqldb-server/configmap.yaml') }}"
+    state: present
+  register: ksqldb_server_configmap
+
+- name: "ksqldb-server : create service"
+  k8s:
+    definition: "{{ lookup('template', 'ksqldb-server/service.yaml') }}"
+    state: present
+
+- name: "ksqldb-server : create cluster"
+  k8s:
+    definition: "{{ lookup('template', 'ksqldb-server/statefulset.yaml') }}"
+    state: present

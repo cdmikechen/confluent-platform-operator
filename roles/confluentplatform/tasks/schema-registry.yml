@@ -1,0 +1,21 @@
+---
+- name: "schema-registry : create service account"
+  k8s:
+    definition: "{{ lookup('template', 'schema-registry/serviceaccount.yaml') }}"
+    state: present
+
+- name: "schema-registry : create configmap"
+  k8s:
+    definition: "{{ lookup('template', 'schema-registry/configmap.yaml') }}"
+    state: present
+  register: schema_registry_configmap
+
+- name: "schema-registry : create service"
+  k8s:
+    definition: "{{ lookup('template', 'schema-registry/service.yaml') }}"
+    state: present
+
+- name: "schema-registry : create cluster"
+  k8s:
+    definition: "{{ lookup('template', 'schema-registry/statefulset.yaml') }}"
+    state: present

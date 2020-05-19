@@ -1,0 +1,21 @@
+---
+- name: "kafka-rest : create service account"
+  k8s:
+    definition: "{{ lookup('template', 'kafka-rest/serviceaccount.yaml') }}"
+    state: present
+
+- name: "kafka-rest : create configmap"
+  k8s:
+    definition: "{{ lookup('template', 'kafka-rest/configmap.yaml') }}"
+    state: present
+  register: kafka_rest_configmap
+
+- name: "kafka-rest : create service"
+  k8s:
+    definition: "{{ lookup('template', 'kafka-rest/service.yaml') }}"
+    state: present
+
+- name: "create kafka-rest cluster"
+  k8s:
+    definition: "{{ lookup('template', 'kafka-rest/statefulset.yaml') }}"
+    state: present

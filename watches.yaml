@@ -1,0 +1,6 @@
+---
+- version: v1alpha1
+  group: pm.bet
+  kind: ConfluentPlatform
+  role: confluentplatform
+  manageStatus: true

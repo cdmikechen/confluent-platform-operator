@@ -1,0 +1,185 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: confluentplatforms.pm.bet
+spec:
+  group: pm.bet
+  names:
+    kind: ConfluentPlatform
+    listKind: ConfluentPlatformList
+    plural: confluentplatforms
+    singular: confluentplatform
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      type: object
+      x-kubernetes-preserve-unknown-fields: true
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: confluent-platform
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - serviceaccounts
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - configmaps
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
+- apiGroups:
+  - apps
+  resourceNames:
+  - confluent-platform
+  resources:
+  - deployments/finalizers
+  - statefulsets
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  - deployments
+  verbs:
+  - get
+- apiGroups:
+  - pm.bet
+  resources:
+  - '*'
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: confluent-platform
+subjects:
+- kind: ServiceAccount
+  name: confluent-platform
+  namespace: operators
+roleRef:
+  kind: ClusterRole
+  name: confluent-platform
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: confluent-platform
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: confluent-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: confluent-platform
+  template:
+    metadata:
+      labels:
+        name: confluent-platform
+    spec:
+      serviceAccountName: confluent-platform
+      containers:
+        - name: confluent-platform
+          # Replace this with the built image name
+          image: "git.betlab.com:4567/kubernetes/operators/confluent-platform:v0.0.178"
+          imagePullPolicy: "Always"
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "confluent-platform"
+            - name: ANSIBLE_GATHERING
+              value: explicit
+      imagePullSecrets:
+      - name: deploy-secret
+      volumes:
+        - name: runner
+          emptyDir: {}
+
