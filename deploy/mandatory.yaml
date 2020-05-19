@@ -195,7 +195,7 @@ spec:
       serviceAccountName: confluent-platform
       containers:
         - name: confluent-platform
-          image: "deniss/confluent-platform-operator:v0.0.1"
+          image: "deniss/confluent-platform-operator:v0.0.2"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
