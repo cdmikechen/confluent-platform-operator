@@ -1,6 +1,12 @@
 ---
-- version: v1alpha1
-  group: pm.bet
+- version: v1beta1
+  group: kafka.pm.bet
   kind: ConfluentPlatform
   role: confluentplatform
+  manageStatus: true
+
+- version: v1beta1
+  group: kafka.pm.bet
+  kind: Topic
+  role: topics
   manageStatus: true

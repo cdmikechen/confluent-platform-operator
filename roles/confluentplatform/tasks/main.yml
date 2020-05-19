@@ -4,7 +4,7 @@
     zookeeper_servers: "{% for host in range(0, zookeeper.size) %}zookeeper-{{ loop.index0 }}.zookeeper.{{ meta.namespace }}:{{ zookeeper.server_port }}:{{ zookeeper.election_port }}{% if not loop.last %};{% endif %}{% endfor %}"
     kafka_zookeeper_connect: "{% for host in range(0, zookeeper.size) %}zookeeper-{{ loop.index0 }}.zookeeper.{{ meta.namespace }}:{{ zookeeper.client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
     kafka_servers: "{% for host in range(0, kafka.size) %}kafka-{{ loop.index0 }}.kafka.{{ meta.namespace }}:9092{% if not loop.last %},{% endif %}{% endfor %}"
-    schema_registry_servers: "{% for host in range(0, schema_registry.size) %}schema-registry-{{ loop.index0 }}.schema-registry-headless.{{ meta.namespace }}:{{ schema_registry.port }}{% if not loop.last %},{% endif %}{% endfor %}"
+    schema_registry_servers: "{% for host in range(0, schema_registry.size) %}schema-registry-{{ loop.index0 }}.schema-registry.{{ meta.namespace }}:{{ schema_registry.port }}{% if not loop.last %},{% endif %}{% endfor %}"
     kafka_connect_servers: "{% for host in range(0, kafka_connect.size) %}kafka-connect-{{ loop.index0 }}.kafka-connect.{{ meta.namespace }}:{{ kafka_connect.port }}{% if not loop.last %},{% endif %}{% endfor %}"
     ksqldb_servers: "{% for host in range(0, ksqldb_server.size) %}ksqldb-server-{{ loop.index0 }}.ksqldb-server.{{ meta.namespace }}:{{ ksqldb_server.port }}{% if not loop.last %},{% endif %}{% endfor %}"
     kafka_rest_servers: "{% for host in range(0, kafka_rest.size) %}kafka-rest-{{ loop.index0 }}.kafka-rest.{{ meta.namespace }}:{{ kafka_rest.port }}{% if not loop.last %},{% endif %}{% endfor %}"
@@ -37,7 +37,3 @@
 - name: "include control-center tasks"
   include_tasks: "control-center.yml"
   when: control_center.enabled | bool == True
-
-- name: "include topic tasks"
-  include_tasks: "topics.yml"
-

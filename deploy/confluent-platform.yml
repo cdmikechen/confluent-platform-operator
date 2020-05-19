@@ -1,5 +1,5 @@
 ---
-apiVersion: pm.bet/v1alpha1
+apiVersion: kafka.pm.bet/v1beta1
 kind: ConfluentPlatform
 metadata:
   name: confluent

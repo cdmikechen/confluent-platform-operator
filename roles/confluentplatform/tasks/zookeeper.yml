@@ -15,6 +15,11 @@
     definition: "{{ lookup('template', 'zookeeper/service.yaml') }}"
     state: present
 
+- name: "zookeeper : create poddisruptionbudget"
+  k8s:
+    definition: "{{ lookup('template', 'zookeeper/poddisruptionbudget.yaml') }}"
+    state: present
+
 - name: "zookeeper : create cluster"
   k8s:
     definition: "{{ lookup('template', 'zookeeper/statefulset.yaml') }}"
