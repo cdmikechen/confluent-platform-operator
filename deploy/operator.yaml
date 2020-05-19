@@ -17,7 +17,7 @@ spec:
       containers:
         - name: confluent-platform
           # Replace this with the built image name
-          image: "git.betlab.com:4567/kubernetes/operators/confluent-platform:v0.0.1"
+          image: "deniss/confluent-platform-operator:v0.0.1"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
